@@ -1,15 +1,26 @@
-from pycaret.regression import load_model, predict_model
 import streamlit as st
 import pandas as pd
-from PIL import Image
- 
-model = load_model('dt_insurance_charges')
- 
-def predict(model, input_df):
-    predictions_df=predict_model(estimator=model, data=input_df)
-    predictions = predictions_df.iloc[0]['prediction_label']
-    return predictions
- 
+import joblib
+
+# Load model
+model = joblib.load("insurance_model.pkl")
+
+st.title("Insurance Cost Prediction")
+
+age = st.number_input("Age", min_value=18, max_value=100, value=30)
+bmi = st.number_input("BMI", min_value=10.0, max_value=50.0, value=25.0)
+children = st.number_input("Children", min_value=0, max_value=10, value=0)
+
+data = pd.DataFrame({
+    'age': [age],
+    'bmi': [bmi],
+    'children': [children]
+})
+
+if st.button("Predict"):
+    prediction = model.predict(data)
+    st.success(f"Estimated Insurance Cost: ${prediction[0]:,.2f}")
+
 def run():
     image=Image.open('logo.png')
     image_hospital = Image.open('hospital.jpg')
