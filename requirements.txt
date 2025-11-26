@@ -1,2 +1,4 @@
-pycaret
 streamlit
+pandas
+scikit-learn
+numpy
